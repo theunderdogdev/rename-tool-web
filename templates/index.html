@@ -1,0 +1,70 @@
+{% extends 'base.html' %} {% block mainApp %}
+<div class="ctrl" ng-controller="viewController">
+  <div class="container-fluid py-4" style="height: 100vh">
+    <div class="card">
+      <div class="card-body">
+        <div class="mb-3">
+          <input
+            ng-model="absPath"
+            class="form-control form-control-lg"
+            ng-class="{'is-invalid': !pathValid, 'is-valid': pathValid && checked}"
+            type="text"
+            id="path"
+            placeholder="Enter path..."
+            aria-label=".form-control-lg example"
+          />
+          <h6 class="invalid-feedback">
+            <span ng-if="absPath === ''">Please enter a path!</span>
+            <span ng-if="absPath !== '' && checked">Please ensure the path entered is correct!</span>
+          </h6>
+          <h6 class="valid-feedback">Looks good!</h6>
+        </div>
+        <button ng-click="checkPath()" class="btn btn-outline-primary d-flex">Get Files <span class="ms-2 material-symbols-rounded"> folder_open </span></button>
+      </div>
+    </div>
+    <div class="row mt-4" id="contentList">
+      <div class="col-6 p-2 mh-full">
+        <h6 class="ms-2">File contents</h6>
+        <div class="scroll-container px-2">
+          <label for="!{ file.name }!" class="my-1 mx-1 card px-3 hover-shadow" ng-repeat="file in pathContents">
+            <input class="form-check-input" id="!{ file.name }!" type="checkbox" value="" />
+            <span class="file-name">!{ file.name }!</span>
+            <span class="icon material-symbols-rounded" ng-if="file.type === 'dir'"> folder </span>
+            <span class="icon material-symbols-rounded" ng-if="file.type === 'file'"> note </span>
+            <span class="icon material-symbols-rounded" ng-if="file.type === 'link'"> switch_access_shortcut </span>
+          </label>
+        </div>
+      </div>
+      <div class="col-6 p-2 mh-full">
+        <h6 class="ms-2">Renamed</h6>
+        <div class="scroll-container px-2"></div>
+      </div>
+    </div>
+  </div>
+  <button class="btn btn-outline-primary icon-btn" id="navBtn"><span class="material-symbols-rounded"> search </span></button>
+  <nav class="card" id="sidePanel">
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="pattern-text" class="form-label">Filter pattern</label>
+        <input
+          type="text"
+          class="form-control"
+          style="text-transform: lowercase"
+          id="pattern-text"
+          placeholder="!{ filter === 'pattern' ? '^\w+$' : 'my file...' }!"
+          ng-model="pattern"
+        />
+      </div>
+      <div class="mb-3">
+        <input type="radio" ng-model="filter" value="start" class="btn-check" name="filter" id="start" autocomplete="off" />
+        <label class="btn btn-outline-primary" for="start">Starts with</label>
+        <input type="radio" ng-model="filter" value="end" class="btn-check" name="filter" id="end" autocomplete="off" />
+        <label class="btn btn-outline-primary" for="end">Ends with</label>
+        <input type="radio" ng-model="filter" value="pattern" class="btn-check" name="filter" id="pattern" autocomplete="off" />
+        <label class="btn btn-outline-primary" for="pattern">Pattern</label>
+      </div>
+      <button class="btn btn-outline-primary d-flex" ng-click="applyPattern()">Apply <span class="material-symbols-rounded"> filter_alt </span></button>
+    </div>
+  </nav>
+</div>
+{% endblock mainApp %}
