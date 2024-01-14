@@ -1,6 +1,6 @@
 from flask import Flask, render_template, jsonify, request
 from os.path import exists, abspath, join, expanduser, isdir, isfile, islink
-from os import listdir
+from os import listdir, stat
 from re import match
 
 app = Flask(__name__, template_folder="./templates", static_folder="./assets")
@@ -17,7 +17,7 @@ def checkpath():
     if match(r"^~\/.*", req_path):
         req_path = req_path.replace("~", expanduser("~"))
         print(req_path)
-    # sub()
+
     if exists(req_path) and isdir(req_path):
         contents = []
         files = [file for file in listdir(req_path) if not file.startswith(".")]

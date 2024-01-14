@@ -26,13 +26,12 @@
       <div class="col-6 p-2 mh-full">
         <h6 class="ms-2">File contents</h6>
         <div class="scroll-container px-2">
-          <label for="!{ file.name }!" class="my-1 mx-1 card px-3 hover-shadow" ng-repeat="file in pathContents">
-            <input class="form-check-input" id="!{ file.name }!" type="checkbox" value="" />
+          <div ng-click="onFileSelect(file.name)" ng-class="{'selected': isSelected(file.name)}" class="my-1 mx-1 card px-3 hover-shadow" ng-repeat="file in pathContents">
             <span class="file-name">!{ file.name }!</span>
             <span class="icon material-symbols-rounded" ng-if="file.type === 'dir'"> folder </span>
             <span class="icon material-symbols-rounded" ng-if="file.type === 'file'"> note </span>
             <span class="icon material-symbols-rounded" ng-if="file.type === 'link'"> switch_access_shortcut </span>
-          </label>
+          </div>
         </div>
       </div>
       <div class="col-6 p-2 mh-full">
@@ -41,8 +40,8 @@
       </div>
     </div>
   </div>
-  <button class="btn btn-outline-primary icon-btn" id="navBtn"><span class="material-symbols-rounded"> search </span></button>
-  <nav class="card" id="sidePanel">
+  <button class="btn btn-outline-primary icon-btn" id="navBtn" ng-click="onNavCtrl()"><span class="material-symbols-rounded"> search </span></button>
+  <nav class="card" id="sidePanel" ng-class="{ 'open': navOpen }">
     <div class="card-body">
       <div class="mb-3">
         <label for="pattern-text" class="form-label">Filter pattern</label>
@@ -63,8 +62,32 @@
         <input type="radio" ng-model="filter" value="pattern" class="btn-check" name="filter" id="pattern" autocomplete="off" />
         <label class="btn btn-outline-primary" for="pattern">Pattern</label>
       </div>
-      <button class="btn btn-outline-primary d-flex" ng-click="applyPattern()">Apply <span class="material-symbols-rounded"> filter_alt </span></button>
+      <button class="btn btn-outline-primary d-flex mb-4" ng-click="applyPattern()">Apply <span class="material-symbols-rounded"> filter_alt </span></button>
+      <div class="nc-divider mb-3" style="--nc-div-wid: 100%"></div>
+      <div class="mb-3">
+        <label for="new-name" class="form-label">New name</label>
+        <input
+          type="text"
+          class="form-control"
+          style="text-transform: lowercase"
+          id="new-name"
+          placeholder='!{ newNameType !== "pattern" ? "new name..." : "^(\\w+)$" }!'
+          ng-model="newNamePat"
+        />
+      </div>
+      <div class="mb-3">
+        <input type="radio" ng-model="newNameType" value="start" class="btn-check" name="rename-pat" id="rn-start" autocomplete="off" />
+        <label class="btn btn-outline-primary" for="rn-start">At start</label>
+        <input type="radio" ng-model="newNameType" value="end" class="btn-check" name="rename-pat" id="rn-end" autocomplete="off" />
+        <label class="btn btn-outline-primary" for="rn-end">At end</label>
+        <input type="radio" ng-model="newNameType" value="pattern" class="btn-check" name="rename-pat" id="rn-pattern" autocomplete="off" />
+        <label class="btn btn-outline-primary" for="rn-pattern">Pattern</label>
+      </div>
+      <button class="btn btn-outline-primary d-flex mb-4" ng-click="applyPattern()">Apply <span class="material-symbols-rounded ms-2"> edit </span></button>
     </div>
+    <button disabled ng-if="selection.length > 0" id="sel-items" type="button" class="btn btn-outline-primary position-absolute">
+      Selected files <span class="badge text-bg-secondary">!{ selection.length }!</span>
+    </button>
   </nav>
 </div>
 {% endblock mainApp %}
